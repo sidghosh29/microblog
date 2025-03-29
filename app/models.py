@@ -108,6 +108,27 @@ class User(UserMixin, db.Model):
         # All write-only relationships have a select() method that constructs a query that returns all the elements in the relationship
         # Whenever a query is included as part of a larger query, SQLAlchemy requires the inner query to be converted to a sub-query by calling the subquery() method.
         return db.session.scalar(query)
+    
+    def following_posts(self):
+        Author = so.aliased(User)
+        Follower = so.aliased(User)
+        return (
+            sa.select(Post)
+            .join(Post.author.of_type(Author))
+            .join(Author.followers.of_type(Follower), isouter=True)
+            .where(sa.or_(
+                Follower.id == self.id,
+                Author.id == self.id,
+            ))
+            .group_by(Post)
+            .order_by(Post.timestamp.desc())
+        )
+    
+    '''
+    The joined table now has all the posts, so I can expand the where() clause to include both posts from followed 
+    users as well as own posts. SQLAlchemy provides the sa.or_(), sa.and_() and sa.not_() helpers to create compound 
+    conditions. In this case I need to use sa.or_() to specify that I have two options for selecting posts.
+    '''
 
 
 class Post(db.Model):
