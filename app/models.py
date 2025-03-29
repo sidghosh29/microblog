@@ -1,0 +1,117 @@
+from datetime import datetime, timezone
+from typing import Optional
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from app import login
+from hashlib import md5
+
+'''
+Flask-SQLAlchemy uses a "snake case" naming convention for database tables by default. 
+For the User model below, the corresponding table in the database will be named user. 
+For a AddressAndPhone model class, the table would be named address_and_phone. 
+If you prefer to choose your own table names, you can add an attribute named __tablename__ 
+to the model class, set to the desired name as a string.
+'''
+
+class User(UserMixin, db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True) 
+    #so.Mapped: Provides precise type information for ORM-mapped attributes.
+    username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,unique=True)
+    '''
+    You can skip sa.String if you're using type hints with so.Mapped[str] unless you want to specify a length like
+    we have done above. The mapped_column() function can infer the datatype from the type hint.
+
+    '''
+    email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
+    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    #Optional: Optional typing hint from Python indicates that an attribute can be None.
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(
+        back_populates='author')
+    
+    about_me: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
+    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
+        default=lambda: datetime.now(timezone.utc))
+    
+    '''
+    The User model has a posts relationship attribute that was configured with the WriteOnlyMapped generic type. 
+    This is a special type of relationship that adds a select() method that returns a database query for the related items. 
+    The u.posts.select() expression takes care of generating the query that links the user to its blog posts.
+
+    Also note, so.WriteOnlyMapped['Post'] encloses the Post class name in single quotes. 
+    This is necessary because the Post class is not yet defined. When a class needs to reference another class 
+    that is defined below it, you cannot write the name directly, because Python will give you an error. 
+    This is called a "forward reference". SQLAlchemy allows you to enter forward references as strings. 
+    When the Post class references 'User', it is not a forward reference because 'User' is defined above 'Post', 
+    so in that case a string is not necessary (but if you want to be consistent you can use a string on that one as well).
+
+    '''
+    
+    '''
+    SQLAlchemy introduced so.Mapped and so.mapped_column for better type safety and clarity in static type checking.
+    '''
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+    '''
+    The __repr__ method tells Python how to print objects of this class, 
+    which is going to be useful for debugging.
+    '''
+
+
+class Post(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    body: so.Mapped[str] = so.mapped_column(sa.String(140))
+    timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    '''
+    When you pass a function as a default, SQLAlchemy will set the field to the value returned by the function.
+    In general, you will want to work with UTC dates and times in a server application instead of the local time 
+    where you are located. This ensures that you are using uniform timestamps regardless of where the users and 
+    the server are located. These timestamps will be converted to the user's local time when they are displayed.
+    '''
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'),index=True)
+    author: so.Mapped[User] = so.relationship(back_populates='posts')
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.body)
+    
+
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
+
+'''
+Password Hashing:
+
+scrypt - what werkzeug.security uses in our project
+PBKDF2-HMAC-SHA256
+bcrypt
+Argon2
+
+from werkzeug.security import generate_password_hash, check_password_hash
+hash = generate_password_hash("riddhi111") # for hash generation
+print(hash)
+Output: 'scrypt:32768:8:1$fkVYrl07tgm2HqFB$282a7165dea1f493beb7cbac26cb4de54d8f8cbae7165f9601947dc07ef2be45d46c20fc96eaefcba6635265891eedab4fdf1e6f76e8f3ae84b4501e2f92aa50'
+
+# The password is transformed into a long encoded string through a series of cryptographic operations that have no known 
+# reverse operation, which means that a person that obtains the hashed password will be unable to use it to recover the 
+# original password. As an additional measure, if you hash the same password multiple times, you will get different results, 
+# since all hashed passwords get a different cryptographic salt, so this makes it impossible to identify if two users have the 
+# same password by looking at their hashes.
+
+print(check_password_hash(hash, "riddhi111")) # for verification
+Output: True
+'''
+    
