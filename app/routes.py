@@ -110,10 +110,7 @@ def register():
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
     # In the case that there are no results, the db.first_or_404 method automatically sends a 404 error back to the client.
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
+    posts = db.session.scalars(sa.select(Post).where(Post.user_id==user.id)).all()
     form = EmptyForm()
     return render_template('user.html', user=user, posts=posts, form=form)
 
@@ -175,3 +172,11 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
+    
+
+@app.route('/explore')
+@login_required
+def explore():
+    query = sa.select(Post).order_by(Post.timestamp.desc())
+    posts = db.session.scalars(query).all()
+    return render_template('index.html', title='Explore', posts=posts)
