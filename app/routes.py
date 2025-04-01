@@ -38,7 +38,9 @@ def index():
         the browser is instructed to send a GET request to grab the page indicated in the redirect, so now the last request 
         is not a POST request anymore, and the refresh command works in a more predictable way.
         '''
-    posts = db.session.scalars(current_user.following_posts()).all()
+    page = request.args.get('page', 1, type=int)
+    posts = db.paginate(current_user.following_posts(), page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False).items
+    
     return render_template('index.html', title='Home', posts = posts, form = form)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -177,6 +179,9 @@ def unfollow(username):
 @app.route('/explore')
 @login_required
 def explore():
+    
+    page = request.args.get('page', 1, type=int)
     query = sa.select(Post).order_by(Post.timestamp.desc())
-    posts = db.session.scalars(query).all()
-    return render_template('index.html', title='Explore', posts=posts)
+    posts = db.paginate(query, page=page,
+                        per_page=app.config['POSTS_PER_PAGE'], error_out=False).items
+    return render_template("index.html", title='Explore', posts=posts)
