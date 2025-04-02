@@ -30,17 +30,20 @@ import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 
+from flask_mail import Mail
+
 app = Flask(__name__) 
 '''The __name__ variable passed to the Flask class is a Python predefined variable, which is set to the name of the module
  in which it is used. Flask uses the location of the module passed here as a starting point when it needs to load associated
    resources such as template files'''
 
 app.config.from_object(Config)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
-
+mail = Mail(app)
 
 if not app.debug:
     if app.config['MAIL_SERVER']:
