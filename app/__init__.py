@@ -6,6 +6,7 @@ the outside world.
 '''
 from flask import Flask
 from config import Config
+from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -31,6 +32,9 @@ from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 
 from flask_mail import Mail
+
+# Load environment variables from .env
+load_dotenv()
 
 app = Flask(__name__) 
 '''The __name__ variable passed to the Flask class is a Python predefined variable, which is set to the name of the module
