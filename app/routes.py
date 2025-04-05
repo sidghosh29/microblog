@@ -8,6 +8,7 @@ from app import db
 from app.models import User, Post
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
+from flask_babel import _
 
 @app.before_request
 def before_request():
@@ -24,7 +25,7 @@ def index():
         post = Post(body=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        flash('Your post is now live!')
+        flash(_('Your post is now live!'))
         return redirect(url_for('index'))
         # Post/Redirect/Get pattern (https://en.wikipedia.org/wiki/Post/Redirect/Get) avoids inserting duplicate posts 
         # when a user inadvertently refreshes the page after submitting a web form.
