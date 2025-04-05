@@ -157,6 +157,11 @@ class Post(db.Model):
     In general, you will want to work with UTC dates and times in a server application instead of the local time 
     where you are located. This ensures that you are using uniform timestamps regardless of where the users and 
     the server are located. These timestamps will be converted to the user's local time when they are displayed.
+
+    "2021-06-28T21:45:23+00:00" is the format for ISO 8601 dates and times. The "+00:00" part at the end 
+    of the string represents timezone offset from UTC and +00:00 means UTC. For instance, +05:30 offset 
+    would mean 5 hours 30 minutes ahead of UTC (India Standard Time). Knowing this info will be important when
+    we display the date and time on the web page. 
     '''
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'),index=True)
     author: so.Mapped[User] = so.relationship(back_populates='posts')
