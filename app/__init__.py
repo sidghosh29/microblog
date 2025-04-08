@@ -36,7 +36,8 @@ from flask_mail import Mail
 from flask_moment import Moment
 from flask_babel import Babel, lazy_gettext as _l
 def get_locale():
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    # return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return 'de'
 
 # Load environment variables from .env
 load_dotenv()
@@ -88,4 +89,37 @@ if not app.debug:
 from app import routes, models, errors
 '''
 The bottom import is a well known workaround that avoids circular imports, a common problem with Flask applications.
+'''
+###
+'''
+before_request, after_request, teardown_request → 
+These are called Request Lifecycle Hooks because they're tied specifically to the lifecycle of handling a request.
+
+context_processor, template_global, etc. → 
+These are often lumped in with "lifecycle hooks" more broadly, because they also let you hook into Flask's behavior 
+at specific points (like rendering templates).
+
+@app.before_request: Runs before each request is processed.
+@app.context_processor: Injects variables or functions into the template context.
+@app.teardown_request: Runs after the request is processed, typically for cleanup.
+Flask extensions like Babel use these hooks to integrate their functionality seamlessly into the app.
+'''
+###
+'''
+Use pybabel extract -F babel.cfg -k _l -o messages.pot . command on terminal to 
+extract all marked translatable strings (including _l() and default _()) from source files 
+using babel.cfg, and saves them to messages.pot.
+
+pybabel init -i messages.pot -d app/translations -l es command on terminal to initialize a new translation folder
+The command will create a es subdirectory inside this directory for the Spanish data files. 
+In particular, there will be a new file named app/translations/es/LC_MESSAGES/messages.po, 
+that is where the translations need to be made.
+
+pybabel compile -d app/translations is then used to compile the new po files to mo files. 
+The .mo file is the file that Flask-Babel will use to load translations for the application.
+
+-> pybabel extract -F babel.cfg -k _l -o messages.pot . can again be used if you add some more markers.
+-> pybabel update -i messages.pot -d app/translations is used to update the translation files. This is 
+going to be an intelligent merge, in which any existing texts will be left alone, while only entries that 
+were added or removed in messages.pot will be affected.
 '''

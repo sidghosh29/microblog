@@ -21,9 +21,9 @@ from flask_babel import lazy_gettext as _l
 
 class LoginForm(FlaskForm):
     username = StringField(_l("Username"), validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    remember_me = BooleanField("Remember Me")
-    submit = SubmitField("Sign In")
+    password = PasswordField(_l("Password"), validators=[DataRequired()])
+    remember_me = BooleanField(_l("Remember Me"))
+    submit = SubmitField(_l("Sign In"))
 
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
