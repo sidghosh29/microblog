@@ -64,6 +64,10 @@
     </script>
 
   {{ moment.include_moment() }}
+  <!-- Injects the Moment.js JavaScript library into your HTML.-->
+  {{ moment.lang(g.locale) }}
+  <!--Tells Moment.js which language/locale to use when displaying dates.-->
+
 </body>
 
 </html>
