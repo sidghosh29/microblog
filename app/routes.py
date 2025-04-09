@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 from datetime import datetime, timezone
 from flask_babel import _, get_locale
 from langdetect import detect, LangDetectException
+from app.translate import translate
 
 @app.before_request
 def before_request():
@@ -243,4 +244,13 @@ def unfollow(username):
     else:
         return redirect(url_for('index'))
     
+
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    data = request.get_json()
+    return {'text': translate(data['text'],
+                              data['source_language'],
+                              data['dest_language'])}
 
