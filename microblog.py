@@ -3,10 +3,12 @@ To complete the application, you need to have a Python script at the top-level t
 defines the Flask application instance. Let's call this script microblog.py, and define
 it as a single line that imports the application instance:
 '''
-from app import app, db, cli
+from app import create_app, db
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app.models import User, Post
+
+app = create_app()
 
 @app.shell_context_processor
 def make_shell_context():

@@ -6,7 +6,7 @@
         <td>
             <!--We had to store the username link in a variable because _() requires a string as its input-->
             {% set user_link %}
-            <a href="{{ url_for('user', username=post.author.username) }}">
+            <a href="{{ url_for('main.user', username=post.author.username) }}">
                 {{ post.author.username }}
             </a>
             {% endset %}

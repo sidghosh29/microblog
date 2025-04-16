@@ -1,6 +1,6 @@
 import requests
 from flask_babel import _
-from app import app
+from flask import current_app as app
 
 # Read Documentation: https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/reference/v3/translate
 def translate(text, source_language, dest_language):

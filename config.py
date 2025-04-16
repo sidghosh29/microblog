@@ -1,9 +1,12 @@
 import os
+from dotenv import load_dotenv
 
 #print(__file__) ---> __file__ is the file path to the current file
 #print(os.path.dirname(__file__)) ---> os.path.dirname(<filepath>) will return the folder path
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+# Load environment variables from .env
+load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess' # class variable
