@@ -39,6 +39,8 @@ from flask_mail import Mail
 from flask_moment import Moment
 from flask_babel import Babel, lazy_gettext as _l
 
+from elasticsearch import Elasticsearch
+
 def get_locale():
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
     # return 'de'
@@ -72,6 +74,12 @@ def create_app(config_class=Config):
     mail.init_app(app)
     moment.init_app(app)
     babel.init_app(app, locale_selector=get_locale)
+
+    # We are passing multiple URLs to Elasticsearch below. 
+    # This is primarily for high availability and fault tolerance in Elasticsearch clusters.
+    
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
