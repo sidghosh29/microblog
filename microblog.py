@@ -1,8 +1,6 @@
-'''
-To complete the application, you need to have a Python script at the top-level that 
-defines the Flask application instance. Let's call this script microblog.py, and define
-it as a single line that imports the application instance:
-'''
+# microblog.py is the entry point of the application. 
+# This is the main script that runs the application.
+
 from app import create_app, db
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -15,24 +13,12 @@ def make_shell_context():
     return {'sa': sa, 'so': so, 'db': db, 'User': User, 'Post': Post}
 
 '''
-The app.shell_context_processor decorator registers the function as a shell context function. 
-When the flask shell command runs, it will invoke this function and register the items returned 
-by it in the shell session. The reason the function returns a dictionary and not a list is that 
-for each item you have to also provide a name under which it will be referenced in the shell, 
-which is given by the dictionary keys.
+Refer to point 5 in 'Notes' for more details on app.shell_context_processor. 
 '''
 ###
 
-
 '''
-The flask run command will look for a Flask application instance in the module referenced by the 
-FLASK_APP environment variable, which in this case is 'microblog.py'. The command sets up a web server
-that is configured to forward requests to this application.
-
-When you run flask run without setting the FLASK_APP environment variable, Flask looks for an application instance
-in a file named app.py or wsgi.py within the current directory. If it finds the application instance (app), Flask
-initializes the application. The application context, which includes configuration, routes, and other components,
-is created only when needed—such as during a request or when explicitly pushed (app.app_context().push()).
+Refer to point 3 in 'Notes' for more details on what 'flask run' command does.
 '''
 
 ###
