@@ -185,3 +185,12 @@ def search():
     return render_template('search.html', title=_('Search'), posts=posts,
                            next_url=next_url, prev_url=prev_url)
 
+
+@bp.route('/user/<username>/popup')
+@login_required
+def user_popup(username):
+    user = db.first_or_404(sa.select(User).where(User.username == username))
+    # The above raises a 404 HTTP error if no result is found
+    form = EmptyForm() # for follow and unfollow
+    return render_template('user_popup.html', user=user, form=form)
+
