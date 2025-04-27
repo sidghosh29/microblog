@@ -82,7 +82,6 @@ class User(UserMixin, db.Model):
     '''
     You can skip sa.String if you're using type hints with so.Mapped[str] unless you want to specify a length like
     we have done above. The mapped_column() function can infer the datatype from the type hint.
-
     '''
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
