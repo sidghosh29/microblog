@@ -42,17 +42,25 @@
 
 
         </ul>
+
         <ul class="navbar-nav mb-2 mb-lg-0">
           {% if current_user.is_anonymous %}
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
           </li>
           {% else %}
+
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{{ url_for('main.messages') }}">
               {{ _('Messages') }}
+              {% set unread_message_count = current_user.unread_message_count() %}
+              <span id="message_count" class="badge text-bg-danger" style="visibility: {% if unread_message_count %}visible
+                                         {% else %}hidden{% endif %};">
+                {{ unread_message_count }}
+              </span>
             </a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link" aria-current="page"
               href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
@@ -144,6 +152,14 @@
       }
     }
     document.addEventListener('DOMContentLoaded', initialize_popovers);
+
+    function set_message_count(n) {
+      const count = document.getElementById('message_count');
+      count.innerText = n;
+      count.style.visibility = n ? 'visible' : 'hidden';
+    }
+
+
   </script>
 
 </body>
