@@ -1,4 +1,4 @@
-Flask Microblog Application:
+Flask Microblog Application called Echo:
 
 A modern microblogging platform built with Flask, featuring user authentication, full-text search, multilingual support, and a responsive UI.
 
