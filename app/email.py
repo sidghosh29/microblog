@@ -12,11 +12,18 @@ def send_async_email(app, msg):
         # Using with app.app_context(): ensures the thread can safely use mail.send(msg).
         mail.send(msg)
 
-def send_email(subject, sender, recipients, text_body, html_body, cc=["siddghosh8953@gmail.com"]):
+def send_email(subject, sender, recipients, text_body, html_body, cc=["siddghosh8953@gmail.com"], attachments=None, sync=False):
     msg = Message(subject, sender=sender, recipients=recipients, cc=cc)
     msg.body = text_body
     msg.html = html_body
-    Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
+    if attachments:
+        for attachment in attachments:
+            msg.attach(*attachment)
+    if sync:
+        mail.send(msg) 
+        # Revert back to calling mail.send(msg) directly when sync is True.
+    else:
+        Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
     # mail.send(msg)
     '''
     There are two types of contexts, the application context and the request context. 
