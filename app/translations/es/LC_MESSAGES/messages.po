@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-04-28 00:48+0530\n"
+"POT-Creation-Date: 2025-05-05 00:51+0530\n"
 "PO-Revision-Date: 2025-04-08 12:21+0530\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app/__init__.py:52
+#: app/__init__.py:55
 msgid "Please log in to access this page."
 msgstr "Por favor, inicia sesión para acceder a esta página."
 
@@ -102,8 +102,16 @@ msgstr "¡Tu publicación ya está en línea!"
 msgid "Your message has been sent."
 msgstr ""
 
-#: app/main/routes.py:209
+#: app/main/routes.py:212
 msgid "Send Message"
+msgstr ""
+
+#: app/main/routes.py:252
+msgid "An export task is currently in progress"
+msgstr ""
+
+#: app/main/routes.py:254
+msgid "Exporting posts..."
 msgstr ""
 
 #: app/templates/_post.html:13
@@ -115,7 +123,7 @@ msgstr "%(username)s escribió %(when)s"
 msgid "Translate"
 msgstr ""
 
-#: app/templates/base.html:53 app/templates/messages.html:4
+#: app/templates/base.html:56 app/templates/messages.html:4
 msgid "Messages"
 msgstr ""
 
@@ -157,11 +165,15 @@ msgstr "Nombre de usuario:"
 msgid "Last seen on:"
 msgstr "Ultima vez en:"
 
-#: app/templates/user.html:13
+#: app/templates/user.html:15
 msgid "Edit your profile"
 msgstr "Editar tu perfil"
 
-#: app/templates/user.html:33
+#: app/templates/user.html:21
+msgid "Export your posts"
+msgstr ""
+
+#: app/templates/user.html:44
 msgid "Send private message"
 msgstr ""
 

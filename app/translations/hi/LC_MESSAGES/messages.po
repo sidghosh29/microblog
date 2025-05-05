@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-04-28 00:48+0530\n"
+"POT-Creation-Date: 2025-05-05 00:51+0530\n"
 "PO-Revision-Date: 2025-04-08 12:52+0530\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hi\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app/__init__.py:52
+#: app/__init__.py:55
 msgid "Please log in to access this page."
 msgstr "कृपया इस पृष्ठ को देखने के लिए लॉग इन करें।"
 
@@ -103,9 +103,17 @@ msgstr "आपकी पोस्ट अब लाइव है!"
 msgid "Your message has been sent."
 msgstr "आपका संदेश भेज दिया गया है।"
 
-#: app/main/routes.py:209
+#: app/main/routes.py:212
 msgid "Send Message"
 msgstr "मेसेज भेजें"
+
+#: app/main/routes.py:252
+msgid "An export task is currently in progress"
+msgstr ""
+
+#: app/main/routes.py:254
+msgid "Exporting posts..."
+msgstr ""
 
 #: app/templates/_post.html:13
 #, python-format
@@ -116,7 +124,7 @@ msgstr "%(username)s ने %(when)s को लिखा"
 msgid "Translate"
 msgstr "अनुवाद करें"
 
-#: app/templates/base.html:53 app/templates/messages.html:4
+#: app/templates/base.html:56 app/templates/messages.html:4
 msgid "Messages"
 msgstr ""
 
@@ -158,13 +166,17 @@ msgstr "उपयोगकर्ता:"
 msgid "Last seen on:"
 msgstr "आखिरी बार देखा गया:"
 
-#: app/templates/user.html:13
+#: app/templates/user.html:15
 msgid "Edit your profile"
 msgstr "अपनी प्रोफ़ाइल संपादित करें"
 
-#: app/templates/user.html:33
+#: app/templates/user.html:21
+msgid "Export your posts"
+msgstr "अपनी पोस्ट निर्यात करें"
+
+#: app/templates/user.html:44
 msgid "Send private message"
-msgstr ""
+msgstr "निजी संदेश भेजें"
 
 #: app/templates/user_popup.html:7
 #, fuzzy
@@ -183,11 +195,11 @@ msgstr ""
 
 #: app/templates/user_popup.html:16
 msgid "Follow"
-msgstr ""
+msgstr "फॉलो करे"
 
 #: app/templates/user_popup.html:23
 msgid "Unfollow"
-msgstr ""
+msgstr "अनफॉलो करें"
 
 #: app/templates/errors/404.html:4
 msgid "File Not Found"
