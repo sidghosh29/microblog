@@ -10,7 +10,6 @@ from app.models import User
 from app.auth.email import send_password_reset_email
 
 
-
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -31,7 +30,7 @@ def login():
         use this mechanism as a temporary solution, because I don't have all the infrastructure necessary to 
         log users in for real yet. The best I can do for now is show a message that confirms that the application
         received the credentials.
-        
+
         When you call the flash() function, Flask stores the message, but flashed messages will not magically 
         appear in web pages. The templates of the application need to render these flashed messages in a way 
         that works for the site layout. These messages will be added to the base template.
@@ -39,18 +38,18 @@ def login():
         An interesting property of these flashed messages is that once they are requested once through the get_flashed_messages
         function they are removed from the message list, so they appear only once after the flash() function is called.
         '''
-        user = db.session.scalar(sa.select(User).where(User.username == form.username.data))
+        user = db.session.scalar(sa.select(User).where(
+            User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
-        if not next_page or urlsplit(next_page).netloc != '': 
+        if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('main.index')
             # Checking urlsplit(next_page).netloc != '' protects the app from Open Redirect Attacks and Phishing Attacks.
         return redirect(next_page)
     return render_template('auth/login.html', title='Sign In', form=form)
-
 
 
 @bp.route('/logout')
@@ -72,9 +71,8 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('auth.login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('auth/register.html', title='Register', form=form)
 
-    
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
@@ -88,8 +86,9 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset your password')
         return redirect(url_for('auth.login'))
-    return render_template('reset_password_request.html',
+    return render_template('auth/reset_password_request.html',
                            title='Reset Password', form=form)
+
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -104,7 +103,4 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('auth.login'))
-    return render_template('reset_password.html', form=form)
-
-
-
+    return render_template('auth/reset_password.html', form=form)
