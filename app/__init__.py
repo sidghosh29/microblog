@@ -6,7 +6,7 @@ the outside world.
 '''
 from flask import Flask, request, current_app
 
-# The current_app variable that Flask provides is a special "context" variable that 
+# The current_app variable that Flask provides is a special "context" variable that...
 # Flask initializes with the application before it dispatches a request.
 
 from config import Config
